@@ -49,7 +49,7 @@ class FMTM_Admin_Menu
 
     public static function render_dashboard(): void
     {
-        if (!current_user_can('manage_options')) {
+        if (!current_user_can('manage_fmtm_tenant') && !current_user_can('manage_options')) {
             wp_die(__('Access denied', 'finance-mt'));
         }
         $tenants = FMTM_Tenant_Manager::get_tenants();

@@ -74,6 +74,7 @@ wp-content/
    ```
 3. **Activate Plugin**
    - Log into WordPress Admin → Plugins → Activate **Finance MT Manager**.
+   - After activation, refresh the admin screen (or log out/in once) so the new capabilities load; a **Finance MT** menu will appear in the left sidebar for Administrators and Editors.
 
 4. **Create Tenants**
    - Navigate to **Finance MT → Dashboard**.
@@ -83,6 +84,7 @@ wp-content/
 5. **Assign Users**
    - Edit generated owner account, share generated password (stored in user meta `fmtm_generated_password`).
    - Additional users can be assigned to the tenant by updating their `fmtm_default_tenant` user meta and role.
+   - If an existing Administrator or Editor should access a tenant, set their role accordingly (Owner/Accountant/Staff/Viewer) and save to persist the default tenant meta.
 
 ## REST API Examples
 

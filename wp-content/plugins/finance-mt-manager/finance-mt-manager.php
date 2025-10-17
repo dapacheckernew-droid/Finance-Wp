@@ -21,6 +21,9 @@ autoload_fmtm();
 register_activation_hook(__FILE__, ['FMTM_Activator', 'activate']);
 register_deactivation_hook(__FILE__, ['FMTM_Activator', 'deactivate']);
 
+// Ensure capabilities are available as soon as the plugin loads so menus render reliably.
+add_action('plugins_loaded', ['FMTM_Activator', 'ensure_capabilities'], 0);
+
 add_action('plugins_loaded', function () {
     load_plugin_textdomain('finance-mt', false, basename(dirname(__FILE__)) . '/languages');
     FMTM_Bootstrap::init();
