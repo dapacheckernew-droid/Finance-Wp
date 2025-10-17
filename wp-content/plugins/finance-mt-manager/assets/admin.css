@@ -1,0 +1,7 @@
+.fmtm-card {background:#fff;border:1px solid #ccd0d4;padding:20px;margin-bottom:20px;border-radius:4px;}
+.fmtm-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;}
+.fmtm-table {width:100%;border-collapse:collapse;}
+.fmtm-table th,.fmtm-table td {border:1px solid #e2e4e7;padding:8px;text-align:left;}
+.fmtm-table th {background:#f6f7f7;}
+.fmtm-flex {display:flex;gap:10px;flex-wrap:wrap;}
+.fmtm-badge {padding:4px 8px;border-radius:4px;background:#0073aa;color:#fff;font-size:12px;}
