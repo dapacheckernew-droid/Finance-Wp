@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS fmtm_accounts (
+CREATE TABLE IF NOT EXISTS {{prefix}}accounts (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     code VARCHAR(20) NOT NULL,
     name VARCHAR(191) NOT NULL,
@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS fmtm_accounts (
     UNIQUE KEY code (code)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE IF NOT EXISTS fmtm_invoices (
+CREATE TABLE IF NOT EXISTS {{prefix}}invoices (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     invoice_number VARCHAR(50) NOT NULL,
     customer_name VARCHAR(191) NOT NULL,
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS fmtm_invoices (
     PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE IF NOT EXISTS fmtm_invoice_items (
+CREATE TABLE IF NOT EXISTS {{prefix}}invoice_items (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     invoice_id BIGINT UNSIGNED NOT NULL,
     item_name VARCHAR(191) NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS fmtm_invoice_items (
     KEY invoice_id (invoice_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE IF NOT EXISTS fmtm_cash_ledger (
+CREATE TABLE IF NOT EXISTS {{prefix}}cash_ledger (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     entry_date DATE NOT NULL,
     reference VARCHAR(50) NULL,
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS fmtm_cash_ledger (
     PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE IF NOT EXISTS fmtm_audit_log (
+CREATE TABLE IF NOT EXISTS {{prefix}}audit_log (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     actor BIGINT UNSIGNED NULL,
     action VARCHAR(100) NOT NULL,
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS fmtm_audit_log (
     PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO fmtm_accounts (code, name, type)
+INSERT INTO {{prefix}}accounts (code, name, type)
 SELECT * FROM (
     SELECT '1000' AS code, 'Cash on Hand / Cash' AS name, 'asset' AS type
     UNION ALL SELECT '1100', 'Bank Account', 'asset'
@@ -70,4 +70,4 @@ SELECT * FROM (
     UNION ALL SELECT '5000', 'Cost of Goods Sold', 'expense'
     UNION ALL SELECT '5100', 'Operating Expenses', 'expense'
 ) AS defaults
-WHERE NOT EXISTS (SELECT 1 FROM fmtm_accounts);
+WHERE NOT EXISTS (SELECT 1 FROM {{prefix}}accounts);

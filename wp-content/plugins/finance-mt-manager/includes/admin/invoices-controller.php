@@ -30,7 +30,7 @@ class FMTM_Invoices_Controller
 
     public function list_invoices(): array
     {
-        return $this->db->get_results('SELECT * FROM fmtm_invoices ORDER BY created_at DESC', ARRAY_A) ?: [];
+        return $this->db->get_results('SELECT * FROM ' . $this->db->prefix . 'invoices ORDER BY created_at DESC', ARRAY_A) ?: [];
     }
 
     private function create_invoice(): array
@@ -57,7 +57,7 @@ class FMTM_Invoices_Controller
         $tax = (float)($_POST['tax'] ?? 0);
         $total = $subtotal + $tax;
 
-        $this->db->insert('fmtm_invoices', [
+        $this->db->insert($this->db->prefix . 'invoices', [
             'invoice_number' => $data['invoice_number'],
             'customer_name' => $data['customer_name'],
             'issue_date' => $data['issue_date'],
@@ -73,7 +73,7 @@ class FMTM_Invoices_Controller
         $invoice_id = $this->db->insert_id;
 
         foreach ($items as $item) {
-            $this->db->insert('fmtm_invoice_items', [
+            $this->db->insert($this->db->prefix . 'invoice_items', [
                 'invoice_id' => $invoice_id,
                 'item_name' => $item['name'],
                 'quantity' => $item['quantity'],
@@ -112,7 +112,7 @@ class FMTM_Invoices_Controller
 
     private function log_action(string $action, int $entity_id, array $data): void
     {
-        $this->db->insert('fmtm_audit_log', [
+        $this->db->insert($this->db->prefix . 'audit_log', [
             'actor' => get_current_user_id(),
             'action' => $action,
             'entity_type' => 'invoice',

@@ -24,13 +24,17 @@ class FMTM_Activator
         $sql = "CREATE TABLE {$tenants_table} (
             id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
             name VARCHAR(191) NOT NULL,
-            slug VARCHAR(191) NOT NULL UNIQUE,
+            slug VARCHAR(191) NOT NULL,
             db_name VARCHAR(191) NOT NULL,
             db_user VARCHAR(191) NOT NULL,
             db_password VARCHAR(191) NOT NULL,
             db_host VARCHAR(191) NOT NULL DEFAULT 'localhost',
+            table_prefix VARCHAR(191) NOT NULL DEFAULT 'fmtm_',
+            storage_mode VARCHAR(50) NOT NULL DEFAULT 'dedicated',
             created_at DATETIME NOT NULL,
-            PRIMARY KEY (id)
+            PRIMARY KEY (id),
+            UNIQUE KEY slug (slug),
+            UNIQUE KEY table_prefix (table_prefix)
         ) {$charset_collate};";
 
         $sql2 = "CREATE TABLE {$user_tenants_table} (

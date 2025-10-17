@@ -68,7 +68,8 @@ class FMTM_Rest_Routes
         if (!$connection) {
             return new WP_Error('tenant_not_found', __('Tenant not found', 'finance-mt'), ['status' => 404]);
         }
-        $results = $connection->get_results('SELECT * FROM fmtm_invoices ORDER BY created_at DESC', ARRAY_A);
+        $invoice_table = $connection->prefix . 'invoices';
+        $results = $connection->get_results("SELECT * FROM {$invoice_table} ORDER BY created_at DESC", ARRAY_A);
         return rest_ensure_response($results ?: []);
     }
 
@@ -105,11 +106,13 @@ class FMTM_Rest_Routes
         if (!$connection) {
             return new WP_Error('tenant_not_found', __('Tenant not found', 'finance-mt'), ['status' => 404]);
         }
-        $invoice = $connection->get_row($connection->prepare('SELECT * FROM fmtm_invoices WHERE id = %d', $request['id']), ARRAY_A);
+        $invoice_table = $connection->prefix . 'invoices';
+        $invoice = $connection->get_row($connection->prepare("SELECT * FROM {$invoice_table} WHERE id = %d", $request['id']), ARRAY_A);
         if (!$invoice) {
             return new WP_Error('invoice_not_found', __('Invoice not found', 'finance-mt'), ['status' => 404]);
         }
-        $items = $connection->get_results($connection->prepare('SELECT * FROM fmtm_invoice_items WHERE invoice_id = %d', $request['id']), ARRAY_A);
+        $items_table = $connection->prefix . 'invoice_items';
+        $items = $connection->get_results($connection->prepare("SELECT * FROM {$items_table} WHERE invoice_id = %d", $request['id']), ARRAY_A);
 
         $html = FMTM_View_Renderer::render('invoice-pdf', [
             'invoice' => $invoice,

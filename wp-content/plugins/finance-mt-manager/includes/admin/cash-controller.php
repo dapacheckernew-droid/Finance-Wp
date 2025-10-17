@@ -29,7 +29,7 @@ class FMTM_Cash_Controller
 
     public function list_entries(): array
     {
-        return $this->db->get_results('SELECT * FROM fmtm_cash_ledger ORDER BY entry_date DESC', ARRAY_A) ?: [];
+        return $this->db->get_results('SELECT * FROM ' . $this->db->prefix . 'cash_ledger ORDER BY entry_date DESC', ARRAY_A) ?: [];
     }
 
     private function create_entry(): array
@@ -44,7 +44,7 @@ class FMTM_Cash_Controller
             return ['type' => 'error', 'message' => __('Amount must be positive.', 'finance-mt')];
         }
 
-        $this->db->insert('fmtm_cash_ledger', [
+        $this->db->insert($this->db->prefix . 'cash_ledger', [
             'entry_date' => $date,
             'reference' => $reference,
             'type' => $type,
@@ -61,7 +61,7 @@ class FMTM_Cash_Controller
 
     private function log_action(string $action, int $entity_id, array $data): void
     {
-        $this->db->insert('fmtm_audit_log', [
+        $this->db->insert($this->db->prefix . 'audit_log', [
             'actor' => get_current_user_id(),
             'action' => $action,
             'entity_type' => 'cash_ledger',

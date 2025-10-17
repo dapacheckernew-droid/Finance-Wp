@@ -5,8 +5,8 @@ Finance MT Manager is a WordPress plugin that turns a WordPress installation int
 ## Architecture Summary
 
 - **WordPress Plugin Only**: Delivered as a drop-in plugin that lives under `wp-content/plugins/finance-mt-manager`.
-- **PHP 8.1+ / MySQL**: Uses native WordPress `wpdb` APIs to provision per-tenant MySQL databases and operate within them.
-- **Per-Tenant Database Isolation**: Each tenant gets its own database (`fmtm_{slug}`) with dedicated tables for accounts, invoices, invoice items, cash ledger, and audit logs.
+- **PHP 8.1+ / MySQL**: Uses native WordPress `wpdb` APIs to provision per-tenant MySQL databases (or a shared database with unique table prefixes when CREATE DATABASE privileges are unavailable).
+- **Per-Tenant Database Isolation**: Each tenant prefers its own database (`fmtm_{slug}`); if the hosting user cannot create databases, the plugin automatically falls back to per-tenant table prefixes (`fmtm_{slug}_`) inside the main WordPress database.
 - **Role-Based Access Control**: Defines custom roles (`fmtm_owner`, `fmtm_accountant`, `fmtm_staff`, `fmtm_viewer`) mapped to WordPress capabilities.
 - **REST API + PDF**: Exposes REST endpoints under `/wp-json/fmtm/v1/...` and leverages DOMPDF for PDF exports.
 - **Responsive Admin Screens**: Custom admin pages for tenant creation, invoice management, and cash ledger entries with Roman Urdu labels.
@@ -20,7 +20,7 @@ Finance MT Manager is a WordPress plugin that turns a WordPress installation int
    - Implement activator to provision control tables and WordPress roles.
 
 2. **Tenant Provisioning**
-   - Add `FMTM_Tenant_Manager` with admin-post handler to create tenant DBs and seed schema via `migrations/tenant_schema.sql`.
+   - Add `FMTM_Tenant_Manager` with admin-post handler to create tenant databases (or prefixed schemas) and seed `migrations/tenant_schema.sql`.
    - Store tenant metadata in `{prefix}fmtm_tenants` and link owner user accounts via `{prefix}fmtm_user_tenants`.
 
 3. **Admin UI**
@@ -79,7 +79,7 @@ wp-content/
 4. **Create Tenants**
    - Navigate to **Finance MT → Dashboard**.
    - Fill in company name, optional slug, admin email.
-   - Submit to provision a dedicated database and owner credentials.
+   - Submit to provision a dedicated database and owner credentials. If the MySQL user cannot create databases, the plugin will automatically provision isolated tables inside the main WordPress database and note this in the success message.
 
 5. **Assign Users**
    - Edit generated owner account, share generated password (stored in user meta `fmtm_generated_password`).
