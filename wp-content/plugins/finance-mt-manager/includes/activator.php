@@ -6,7 +6,6 @@ class FMTM_Activator
     {
         self::create_tables();
         self::register_roles();
-        self::ensure_capabilities();
     }
 
     public static function deactivate(): void
@@ -50,72 +49,27 @@ class FMTM_Activator
 
     private static function register_roles(): void
     {
-        $definitions = [
-            'fmtm_owner' => [
-                'label' => __('Tenant Owner', 'finance-mt'),
-                'caps' => [
-                    'read' => true,
-                    'manage_fmtm_tenant' => true,
-                    'manage_fmtm_invoices' => true,
-                    'manage_fmtm_cash' => true,
-                ],
-            ],
-            'fmtm_accountant' => [
-                'label' => __('Accountant', 'finance-mt'),
-                'caps' => [
-                    'read' => true,
-                    'manage_fmtm_invoices' => true,
-                    'manage_fmtm_cash' => true,
-                ],
-            ],
-            'fmtm_staff' => [
-                'label' => __('Staff', 'finance-mt'),
-                'caps' => [
-                    'read' => true,
-                    'manage_fmtm_invoices' => true,
-                ],
-            ],
-            'fmtm_viewer' => [
-                'label' => __('Viewer', 'finance-mt'),
-                'caps' => [
-                    'read' => true,
-                ],
-            ],
+        $capabilities = [
+            'read' => true,
+            'manage_fmtm_tenant' => true,
+            'manage_fmtm_invoices' => true,
+            'manage_fmtm_cash' => true,
         ];
+        add_role('fmtm_owner', __('Tenant Owner', 'finance-mt'), $capabilities);
 
-        foreach ($definitions as $role => $definition) {
-            if (!get_role($role)) {
-                add_role($role, $definition['label'], $definition['caps']);
-                continue;
-            }
+        add_role('fmtm_accountant', __('Accountant', 'finance-mt'), [
+            'read' => true,
+            'manage_fmtm_invoices' => true,
+            'manage_fmtm_cash' => true,
+        ]);
 
-            $existing = get_role($role);
-            foreach ($definition['caps'] as $cap => $grant) {
-                if ($grant) {
-                    $existing->add_cap($cap);
-                }
-            }
-        }
-    }
+        add_role('fmtm_staff', __('Staff', 'finance-mt'), [
+            'read' => true,
+            'manage_fmtm_invoices' => true,
+        ]);
 
-    public static function ensure_capabilities(): void
-    {
-        $caps = [
-            'manage_fmtm_tenant',
-            'manage_fmtm_invoices',
-            'manage_fmtm_cash',
-        ];
-
-        foreach (['administrator', 'editor'] as $role_name) {
-            $role = get_role($role_name);
-            if (!$role) {
-                continue;
-            }
-            foreach ($caps as $cap) {
-                if (!$role->has_cap($cap)) {
-                    $role->add_cap($cap);
-                }
-            }
-        }
+        add_role('fmtm_viewer', __('Viewer', 'finance-mt'), [
+            'read' => true,
+        ]);
     }
 }
